@@ -1,14 +1,13 @@
 //general conventions:
 //Dimensions:
-// heights are in Rack units (1.75 in)
-// other dimensions are in inches
+// all dimensions are in inches
 //Directions:
-// x - width f rack
+// x - width of rack
 // y - depth (front to back)
 // z - vertical height
 
 //dimensions of panel
-desired_height = 4; //in rack-units
+desired_height = 5*1.75; //in inches (1.75in per RU)
 desired_depth = 4; //front-to-back, in inches
 desired_thickness = 0.1; //thickness of metal, in inches
 holediam=0.25; //diameter of screw hole; TODO: verify this; might need to be slightly oversized due to undersizing problem (https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/undersized_circular_objects)
@@ -38,13 +37,13 @@ module frontpanel(height, depth, thickness)
 {
 	//front panel
 	difference() {
-		cube([fullwidth, thickness, height*1.75]);
+		cube([fullwidth, thickness, height]);
 			union() {
 				//front face, lower left
 				cornerround(cornerradius);
 
 				//front face, upper left
-				translate([0,0,desired_height*1.75])
+				translate([0,0,height])
 					rotate([0,90,0])
 						cornerround(cornerradius);
 
@@ -54,7 +53,7 @@ module frontpanel(height, depth, thickness)
 						cornerround(cornerradius);
 		
 				//front face, upper right
-				translate([fullwidth,0,desired_height*1.75])
+				translate([fullwidth,0,height])
 					rotate([0,180,0])
 						cornerround(cornerradius);
 			}
@@ -88,7 +87,7 @@ module depthpanel(height, depth, thickness)
 module blankingpanel(height, depth, thickness)
 {
 
-	//height in rack-units (1.75 in)
+	//height in inches (1.75in per RU)
 	//depth (front-to-back) in inches
 	//thickness (metal thickness) in inches)
 
@@ -116,7 +115,7 @@ module blankingpanel(height, depth, thickness)
 					cylinder(h=10*thickness, r=holediam/2);
 
 			//top-left hole
-			translate([(fullwidth-holewidth)/2, 5*thickness, (height*1.75)-0.875])
+			translate([(fullwidth-holewidth)/2, 5*thickness,height-0.875])
 				rotate([90, 0, 0])
 					cylinder(h=10*thickness, r=holediam/2);		
 		
@@ -127,7 +126,7 @@ module blankingpanel(height, depth, thickness)
 					cylinder(h=10*thickness, r=holediam/2);
 
 			//top-right hole
-			translate([(fullwidth-holewidth)/2 + holewidth, 5*thickness, (height*1.75)-0.875])
+			translate([(fullwidth-holewidth)/2 + holewidth, 5*thickness, height-0.875])
 				rotate([90, 0, 0])
 					cylinder(h=10*thickness, r=holediam/2);
 		}
@@ -138,9 +137,5 @@ module blankingpanel(height, depth, thickness)
 
 
 union() {
-	blankingpanel(desired_height, desired_depth, desired_thickness);
-
-					
-
-	
+	blankingpanel(desired_height, desired_depth, desired_thickness);	
 }
