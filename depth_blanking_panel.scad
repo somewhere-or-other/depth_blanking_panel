@@ -84,6 +84,14 @@ module depthpanel(height, depth, thickness)
 
 }
 
+
+module fulldepthpanel(height, depth, thickness)
+{
+
+	cube([insidewidth, thickness, (2*depth)+height]);
+
+}
+
 module blankingpanel(height, depth, thickness)
 {
 
@@ -95,13 +103,8 @@ module blankingpanel(height, depth, thickness)
 		union() 
 		{
 			frontpanel(height, depth, thickness);
-			//lower depth panel
-			depthpanel(height, depth, thickness);
-		
-			//upper depth panel
-			translate([0, 0, 1.75*height-thickness])
-				depthpanel(height, depth, thickness);
-	
+			translate([(fullwidth-insidewidth)/2, 0, -depth])
+				fulldepthpanel(height, depth, thickness);	
 		}
 
 
