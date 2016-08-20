@@ -87,8 +87,32 @@ module depthpanel(height, depth, thickness)
 
 module fulldepthpanel(height, depth, thickness)
 {
+	difference()
+	{
+		cube([insidewidth, thickness, (2*depth)+height]);
+		union()
+		{
+				//depth panel, lower left
+				cornerround(cornerradius);
 
-	cube([insidewidth, thickness, (2*depth)+height]);
+				//depth panel, upper left
+				translate([0,0,height+2*depth])
+					rotate([0,90,0])
+						cornerround(cornerradius);
+
+				//depth panel, lower right
+				translate([insidewidth, 0, 0])
+					rotate([0,270,0])
+						cornerround(cornerradius);
+		
+				//depth panel, upper right
+				translate([insidewidth,0,height+2*depth])
+					rotate([0,180,0])
+						cornerround(cornerradius);
+
+			
+		}
+	}
 
 }
 
