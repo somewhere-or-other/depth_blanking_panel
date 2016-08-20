@@ -12,6 +12,7 @@ desired_height = 4; //in rack-units
 desired_depth = 4; //front-to-back, in inches
 desired_thickness = 0.1; //thickness of metal, in inches
 holediam=0.25; //diameter of screw hole; TODO: verify this; might need to be slightly oversized due to undersizing problem (https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/undersized_circular_objects)
+cornerradius=0.2; //radius of rounded corners, in inches
 
 
 //useful constants
@@ -33,6 +34,57 @@ module cornerround(radius, height=10*desired_thickness)
 	}
 }
 
+module frontpanel(height, depth, thickness)
+{
+	//front panel
+	difference() {
+		cube([fullwidth, thickness, height*1.75]);
+			union() {
+				//front face, lower left
+				cornerround(cornerradius);
+
+				//front face, upper left
+				translate([0,0,desired_height*1.75])
+					rotate([0,90,0])
+						cornerround(cornerradius);
+
+				//front face, lower right
+				translate([fullwidth, 0, 0])
+					rotate([0,270,0])
+						cornerround(cornerradius);
+		
+				//front face, upper right
+				translate([fullwidth,0,desired_height*1.75])
+					rotate([0,180,0])
+						cornerround(cornerradius);
+			}
+	}
+
+}
+
+module depthpanel(height, depth, thickness)
+{
+
+	difference() {
+		translate([(fullwidth-insidewidth)/2, 0, 0])
+			cube([insidewidth, depth, thickness]);
+
+		union() {
+			//left-back corner
+			translate([(fullwidth-insidewidth)/2, desired_depth, -cornerradius/2])
+				rotate([90,0,0])
+					cornerround(cornerradius);
+
+			//right-back corner
+			translate([(fullwidth-insidewidth)/2+insidewidth, desired_depth, -cornerradius/2])
+				rotate([90,0,270])
+					cornerround(cornerradius);
+		}
+
+	}
+
+}
+
 module blankingpanel(height, depth, thickness)
 {
 
@@ -43,22 +95,19 @@ module blankingpanel(height, depth, thickness)
 	difference() {
 		union() 
 		{
-			//front panel
-			cube([fullwidth, thickness, height*1.75]);
-			
+			frontpanel(height, depth, thickness);
 			//lower depth panel
-			translate([(fullwidth-insidewidth)/2, 0, 0])
-				cube([insidewidth, depth, thickness]);
+			depthpanel(height, depth, thickness);
 		
 			//upper depth panel
-			translate([(fullwidth-insidewidth)/2, 0, 1.75*height-thickness])
-				cube([insidewidth, depth, thickness]);
+			translate([0, 0, 1.75*height-thickness])
+				depthpanel(height, depth, thickness);
 	
 		}
 
 
 
-		//holes
+		//mounting holes
 		
 		union() {
 			//bottom-left hole
@@ -88,12 +137,10 @@ module blankingpanel(height, depth, thickness)
 }
 
 
-difference() {
+union() {
 	blankingpanel(desired_height, desired_depth, desired_thickness);
 
-	union() {
-		cornerround(0.25);
+					
 
-	}
-
+	
 }
