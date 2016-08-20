@@ -22,7 +22,16 @@ holewidth=18.3071; //center-to-center hole spacing
 //other parameters
 $fn = 36; // number of steps per circle, for approximating circle/cylinder/sphere using polygons
 
-
+module cornerround(radius, height=10*desired_thickness)
+{
+	difference() {
+	translate([-1,-radius/2,-1])
+		cube(radius+1);
+	translate([radius,height/2,radius])
+		rotate([90,0,0])
+			cylinder(h=height, r=radius);
+	}
+}
 
 module blankingpanel(height, depth, thickness)
 {
@@ -79,4 +88,12 @@ module blankingpanel(height, depth, thickness)
 }
 
 
-blankingpanel(desired_height, desired_depth, desired_thickness);
+difference() {
+	blankingpanel(desired_height, desired_depth, desired_thickness);
+
+	union() {
+		cornerround(0.25);
+
+	}
+
+}
