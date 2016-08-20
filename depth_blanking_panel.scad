@@ -17,7 +17,7 @@ cornerradius=0.2; //radius of rounded corners, in inches
 
 //useful constants
 fullwidth=19; //in front of vertical posts
-insidewidth=17.7165; //inside vertical posts
+insidewidth=17.2165; //inside vertical posts
 holewidth=18.3071; //center-to-center hole spacing
 
 //other parameters
