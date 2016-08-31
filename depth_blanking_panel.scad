@@ -7,17 +7,18 @@
 // z - vertical height
 
 //dimensions of panel
-desired_height = 5*1.75; //in inches (1.75in per RU)
+desired_height = 4*1.75; //in inches (1.75in per RU)
 desired_depth = 4; //front-to-back, in inches
-desired_thickness = 0.1; //thickness of metal, in inches
+desired_thickness = 0.25; //thickness of material, in inches
 holediam=0.25; //diameter of screw hole; TODO: verify this; might need to be slightly oversized due to undersizing problem (https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/undersized_circular_objects)
 cornerradius=0.2; //radius of rounded corners, in inches
 
 
 //useful constants
 fullwidth=19; //in front of vertical posts
-insidewidth=17.7165-0.5; //inside vertical posts; be sure to leave some extra space (eg 0.5 in), to make it less tight
+insidewidth=17.7165; //inside vertical posts; be sure to leave some extra space (eg 0.5 in), to make it less tight
 holewidth=18.3071; //center-to-center hole spacing
+cablingspacewidth=2*0.25; //inches, to bring in the front-to-back panels, to allow for cabling; this is total across both sides
 
 //other parameters
 $fn = 36; // number of steps per circle, for approximating circle/cylinder/sphere using polygons
@@ -65,17 +66,17 @@ module depthpanel(height, depth, thickness)
 {
 
 	difference() {
-		translate([(fullwidth-insidewidth)/2, 0, 0])
-			cube([insidewidth, depth, thickness]);
+		translate([(fullwidth-insidewidth+cablingspacewidth)/2, 0, 0])
+			cube([insidewidth-cablingspacewidth, depth, thickness]);
 
 		union() {
 			//left-back corner
-			translate([(fullwidth-insidewidth)/2, desired_depth, -cornerradius/2])
+			translate([(fullwidth-insidewidth+cablingspacewidth)/2, desired_depth, -cornerradius/2])
 				rotate([90,0,0])
 					cornerround(cornerradius);
 
 			//right-back corner
-			translate([(fullwidth-insidewidth)/2+insidewidth, desired_depth, -cornerradius/2])
+			translate([(fullwidth-insidewidth+cablingspacewidth)/2+insidewidth-cablingspacewidth, desired_depth, -cornerradius/2])
 				rotate([90,0,270])
 					cornerround(cornerradius);
 		}
